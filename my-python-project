@@ -1,0 +1,54 @@
+import openpyxl
+
+wrkbk = openpyxl.load_workbook("Olympic.xlsx")
+
+sh = wrkbk.active
+#1st Exercise - we see how many gold a player have over the years
+total_gold_per_sportsman = {}
+for norows in range(2,sh.max_row+1):
+    athelete_name  = sh.cell(norows,1).value
+    current_gold  = sh.cell(norows,7).value
+
+    if athelete_name in total_gold_per_sportsman:
+        total_gold = total_gold_per_sportsman.get(athelete_name)
+        total_gold_per_sportsman[athelete_name] = current_gold + total_gold
+    else:
+        total_gold_per_sportsman[athelete_name] = current_gold
+
+print(total_gold_per_sportsman)
+
+#2nd Exercise - we see how many total meadal a player have over the year
+
+total_medal_per_sportsman = {}
+for norows in range(2,sh.max_row+1):
+    athelete_name  = sh.cell(norows,1).value
+    current_total  = sh.cell(norows,7).value + sh.cell(norows,8).value + sh.cell(norows,9).value
+
+    if athelete_name in total_medal_per_sportsman:
+        total_medal = total_medal_per_sportsman.get(athelete_name)
+        total_medal_per_sportsman[athelete_name] = current_total + total_medal
+    else:
+        total_medal_per_sportsman[athelete_name] = current_total
+
+print(total_medal_per_sportsman)
+
+#3rd Excercise - to get all the players name having total medals less than 5
+
+total_medal_less_than_five = {}
+
+for athelete, medal in total_medal_per_sportsman.items():
+    if medal < 5:
+        total_medal_less_than_five[athelete] = medal
+
+
+print(total_medal_less_than_five)
+
+#Last Excericse - for last exercise we addd value in file
+#we will add total medals for all player in every row and then save it in new file
+
+for norows in range(2,sh.max_row+1):
+    total  = sh.cell(norows,7).value + sh.cell(norows,8).value + sh.cell(norows,9).value
+    cell_no = sh.cell(norows,10) #cell is save in variable so we can refrence it
+    cell_no.value = total
+
+wrkbk.save("new_Olympic.xlsx")
